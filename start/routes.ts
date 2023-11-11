@@ -1,27 +1,7 @@
-/*
-|--------------------------------------------------------------------------
-| Routes
-|--------------------------------------------------------------------------
-|
-| This file is dedicated for defining HTTP routes. A single file is enough
-| for majority of projects, however you can define routes in different
-| files and just make sure to import them inside this file. For example
-|
-| Define routes in following two files
-| ├── start/routes/cart.ts
-| ├── start/routes/customer.ts
-|
-| and then import them inside `start/routes.ts` as follows
-|
-| import './routes/cart'
-| import './routes/customer'
-|
-*/
-
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.get('/', async () => {
-  return { hello: 'world' }
+  return {hello: 'world'}
 })
 
 Route.group(() => {
@@ -33,10 +13,52 @@ Route.group(() => {
   Route.get(
     "/",
     "Manage/UsersController.index"
-  ).middleware('auth');
+  ).middleware('auth:manage');
 
   Route.post(
     "/login",
     "Manage/UsersController.login"
   );
 }).prefix("api/manage/user");
+
+Route.group(() => {
+  Route.get(
+    "/",
+    "Manage/EmployeesController.index"
+  ).middleware('auth:manage');
+  Route.get(
+    "/:id",
+    "Manage/EmployeesController.show"
+  ).middleware('auth:manage');
+  Route.post(
+    "/",
+    "Manage/EmployeesController.store"
+  ).middleware('auth:manage');
+  Route.put(
+    "/:id",
+    "Manage/EmployeesController.update"
+  ).middleware('auth:manage');
+  Route.delete(
+    "/:id",
+    "Manage/EmployeesController.destroy"
+  ).middleware('auth:manage');
+}).prefix("api/manage/employee");
+
+Route.group(() => {
+  Route.get(
+    "/",
+    "Manage/MachinesController.index"
+  ).middleware('auth:manage');
+  Route.get(
+    "/:id",
+    "Manage/MachinesController.show"
+  ).middleware('auth:manage');
+  Route.put(
+    "/:id",
+    "Manage/MachinesController.update"
+  ).middleware('auth:manage');
+  Route.delete(
+    "/:id",
+    "Manage/MachinesController.destroy"
+  ).middleware('auth:manage');
+}).prefix("api/manage/machine");

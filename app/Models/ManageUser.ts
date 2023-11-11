@@ -39,6 +39,6 @@ export default class ManageUser extends BaseModel {
   @column.dateTime({autoCreate: true, serializeAs: 'createdAt', columnName: 'created_at'})
   public createdAt: DateTime
 
-  @column.dateTime({autoCreate: true, autoUpdate: true, serializeAs: 'updatedAt', columnName: 'updatedAt'})
+  @column.dateTime({autoCreate: true, autoUpdate: true, serializeAs: 'updatedAt', columnName: 'updated_at'})
   public updatedAt: DateTime
 }
