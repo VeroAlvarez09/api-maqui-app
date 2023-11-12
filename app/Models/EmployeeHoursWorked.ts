@@ -2,32 +2,40 @@ import {DateTime} from 'luxon'
 import {BaseModel, BelongsTo, belongsTo, column} from '@ioc:Adonis/Lucid/Orm'
 import Company from "App/Models/Company";
 import Employee from "App/Models/Employee";
+import Machine from "App/Models/Machine";
 
 export default class EmployeeHoursWorked extends BaseModel {
+  public static table = 'employee_hours_worked'
+
   @column({isPrimary: true})
   public id: number
 
   @column({serializeAs: 'idCompany', columnName: 'id_company'})
-  public id_company: number
-  @belongsTo(() => Company)
+  public idCompany: number
+  @belongsTo(() => Company, {foreignKey: 'idCompany'})
   public company: BelongsTo<typeof Company>
 
+  @column({serializeAs: 'idMachine', columnName: 'id_machine'})
+  public idMachine: number
+  @belongsTo(() => Machine, {foreignKey: 'idMachine'})
+  public machine: BelongsTo<typeof Machine>
+
   @column({serializeAs: 'idEmployee', columnName: 'id_employee'})
-  public id_employee: number
-  @belongsTo(() => Employee)
+  public idEmployee: number
+  @belongsTo(() => Employee, {foreignKey: 'idEmployee'})
   public employee: BelongsTo<typeof Employee>
 
   @column({serializeAs: 'totalHours', columnName: 'total_hours'})
-  public total_hours: number
+  public totalHours: number
 
   @column({serializeAs: 'valuePerHour', columnName: 'value_per_hour'})
-  public value_per_hour: number
+  public valuePerHour: number
 
   @column({serializeAs: 'totalValue', columnName: 'total_value'})
-  public total_value: number
+  public totalValue: number
 
   @column.date({serializeAs: 'workedAt', columnName: 'worked_at'})
-  public worked_at: DateTime
+  public workedAt: DateTime
 
   @column.dateTime({autoCreate: true, serializeAs: 'createdAt', columnName: 'created_at'})
   public createdAt: DateTime

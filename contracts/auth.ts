@@ -6,6 +6,7 @@
  */
 
 import ManageUser from 'App/Models/ManageUser'
+import Employee from "App/Models/Employee";
 
 declare module '@ioc:Adonis/Addons/Auth' {
   /*
@@ -25,9 +26,9 @@ declare module '@ioc:Adonis/Addons/Auth' {
       implementation: LucidProviderContract<typeof ManageUser>
       config: LucidProviderConfig<typeof ManageUser>
     },
-    user_dashboard: {
-      implementation: LucidProviderContract<typeof ManageUser>
-      config: LucidProviderConfig<typeof ManageUser>
+    user_employee: {
+      implementation: LucidProviderContract<typeof Employee>
+      config: LucidProviderConfig<typeof Employee>
     }
   }
   interface GuardsList {
@@ -36,10 +37,10 @@ declare module '@ioc:Adonis/Addons/Auth' {
       config: OATGuardConfig<'user'>
       client: OATClientContract<'user'>
     },
-    dashboard: {
-      implementation: OATGuardContract<'user_dashboard', 'dashboard'>
-      config: OATGuardConfig<'user_dashboard'>
-      client: OATClientContract<'user_dashboard'>
+    employee: {
+      implementation: OATGuardContract<'user_employee', 'employee'>
+      config: OATGuardConfig<'user_employee'>
+      client: OATClientContract<'user_employee'>
     }
   }
 }

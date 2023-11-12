@@ -1,5 +1,7 @@
 import Route from '@ioc:Adonis/Core/Route'
 
+declare function require(name:string);
+require('./routesEmployees');
 Route.get('/', async () => {
   return {hello: 'world'}
 })

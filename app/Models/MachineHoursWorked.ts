@@ -5,32 +5,40 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import Company from "App/Models/Company";
 import Machine from "App/Models/Machine";
+import Employee from "App/Models/Employee";
 
 export default class MachineHoursWorked extends BaseModel {
+  public static table = 'machine_hours_worked'
+
   @column({isPrimary: true})
   public id: number
 
   @column({serializeAs: 'idCompany', columnName: 'id_company'})
-  public id_company: number
-  @belongsTo(() => Company)
+  public idCompany: number
+  @belongsTo(() => Company, {foreignKey: 'idCompany'})
   public company: BelongsTo<typeof Company>
 
+  @column({serializeAs: 'idEmployee', columnName: 'id_employee'})
+  public idEmployee: number
+  @belongsTo(() => Employee, {foreignKey: 'idEmployee'})
+  public employee: BelongsTo<typeof Employee>
+
   @column({serializeAs: 'idMachine', columnName: 'id_machine'})
-  public id_machine: number
-  @belongsTo(() => Machine)
+  public idMachine: number
+  @belongsTo(() => Machine, {foreignKey: 'idMachine'})
   public machine: BelongsTo<typeof Machine>
 
   @column({serializeAs: 'totalHours', columnName: 'total_hours'})
-  public total_hours: number
+  public totalHours: number
 
   @column({serializeAs: 'valuePerHour', columnName: 'value_per_hour'})
-  public value_per_hour: number
+  public valuePerHour: number
 
   @column({serializeAs: 'totalValue', columnName: 'total_value'})
-  public total_value: number
+  public totalValue: number
 
   @column.date({serializeAs: 'workedAt', columnName: 'worked_at'})
-  public worked_at: DateTime
+  public workedAt: DateTime
 
   @column.dateTime({autoCreate: true, serializeAs: 'createdAt', columnName: 'created_at'})
   public createdAt: DateTime

@@ -1,12 +1,13 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'employee_hour_workeds'
+  protected tableName = 'employee_hours_worked'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.integer('id_company').unsigned().references('id').inTable('companies').onDelete('CASCADE')
+      table.integer('id_machine').unsigned().references('id').inTable('machines').onDelete('CASCADE')
       table.integer('id_employee').unsigned().references('id').inTable('employees').onDelete('CASCADE')
       table.double('total_hours')
       table.double('value_per_hour')

@@ -25,19 +25,19 @@ const authConfig: AuthConfig = {
         model: () => import('App/Models/ManageUser'),
       },
     },
-    dashboard: {
+    employee: {
       driver: 'oat',
       tokenProvider: {
         type: 'api',
         driver: 'database',
-        table: 'api_tokens',
-        foreignKey: 'user_id',
+        table: 'api_tokens_employees',
+        foreignKey: 'employee_id',
       },
       provider: {
         driver: 'lucid',
         identifierKey: 'id',
         uids: ['email'],
-        model: () => import('App/Models/ManageUser'),
+        model: () => import('App/Models/Employee'),
       },
     }
   },

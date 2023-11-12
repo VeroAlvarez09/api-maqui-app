@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.integer('id_company').unsigned().references('id').inTable('companies').onDelete('CASCADE')
       table.integer('id_machine').unsigned().references('id').inTable('machines').onDelete('CASCADE')
+      table.integer('id_employee').unsigned().references('id').inTable('employees').onDelete('CASCADE')
       table.double('total_hours')
       table.double('value_per_hour')
       table.double('total_value')
