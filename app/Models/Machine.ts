@@ -6,6 +6,9 @@ export default class Machine extends BaseModel {
   @column({isPrimary: true})
   public id: number
 
+  @column({serializeAs: 'name', columnName: 'name'})
+  public name: string
+
   @column({serializeAs: 'brand', columnName: 'brand'})
   public brand: string
 
@@ -20,7 +23,7 @@ export default class Machine extends BaseModel {
 
   @column({serializeAs: 'idCompany', columnName: 'id_company'})
   public idCompany: number
-  @belongsTo(() => Company)
+  @belongsTo(() => Company, {foreignKey: 'idCompany'})
   public company: BelongsTo<typeof Company>
 
   @column({serializeAs: 'valuePerHour', columnName: 'value_per_hour'})

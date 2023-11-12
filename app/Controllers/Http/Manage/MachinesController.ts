@@ -4,8 +4,8 @@ import Machine from "App/Models/machine";
 
 export default class MachinesController {
 
-  async index({response}) {
-    const machines = await machine.query().paginate(1, 50);
+  async index({params, response}) {
+    const machines = await machine.query().preload('company').paginate(params.page ?? 1, params.perPage ?? 20);
 
     response.send(machines)
   }
@@ -24,7 +24,7 @@ export default class MachinesController {
         name: schema.string(),
         brand: schema.string(),
         model: schema.number(),
-        location: schema.string(),
+        location: schema.string.optional(),
         serial: schema.string(),
         color: schema.string(),
         idCompany: schema.number(),
@@ -50,7 +50,7 @@ export default class MachinesController {
   }
 
   async update({request, params, response}) {
-    const data = request.only(['brand','location', 'color', 'idCompany', 'valuePerHour'])
+    const data = request.only(['name', 'brand', 'location', 'color', 'idCompany', 'valuePerHour'])
 
     const machine = await Machine.findOrFail(params.id)
 

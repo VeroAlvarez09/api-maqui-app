@@ -53,6 +53,10 @@ Route.group(() => {
     "/:id",
     "Manage/MachinesController.show"
   ).middleware('auth:manage');
+  Route.post(
+    "/",
+    "Manage/MachinesController.store"
+  ).middleware('auth:manage');
   Route.put(
     "/:id",
     "Manage/MachinesController.update"
