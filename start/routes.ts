@@ -78,4 +78,15 @@ Route.group(() => {
     "/:id",
     "Manage/MachinesController.destroy"
   ).middleware('auth:manage');
+
+  Route.get(
+    "/report/hours",
+    "Manage/MachinesController.indexReportsHours"
+  ).middleware('auth:manage');
+
+  Route.get(
+    "/report/hours/:id",
+    "Manage/MachinesController.detailHoursByMachine"
+  ).middleware('auth:manage');
+
 }).prefix("api/manage/machine");

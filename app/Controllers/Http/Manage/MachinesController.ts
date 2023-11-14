@@ -1,6 +1,8 @@
 import machine from "App/Models/machine";
 import {schema} from "@adonisjs/validator/build/src/Schema";
 import Machine from "App/Models/machine";
+import Database from "@ioc:Adonis/Lucid/Database";
+import MachineHoursWorked from "App/Models/MachineHoursWorked";
 
 export default class MachinesController {
 
@@ -67,6 +69,67 @@ export default class MachinesController {
     await machine.delete()
 
     return response.send(true);
+  }
+
+  async indexReportsHours({request, response}) {
+    try {
+      const {month, year, page, perPage} = request.all();
+      const startOfMonth = `${Number(year)}-${Number(month)}-01 00:00:00`;
+      const endOfMonth = `${Number(year)}-${Number(month) + 1}-01 00:00:00`;
+
+      let hoursByMachines = await MachineHoursWorked.query()
+        .select('*', Database.raw('SUM(total_hours) as totalHours'), Database.raw('SUM(total_value) as totalValue'))
+        .whereBetween('workedAt', [startOfMonth, endOfMonth])
+        .groupBy('idMachine')
+        .preload('machine')
+        .paginate(page ?? 1, perPage ?? 20);
+
+      let data: object[] = [];
+      hoursByMachines.map(row => {
+        data.push({
+            idMachine: row.idMachine,
+            totalHours: row.$extras.totalHours,
+            totalValue: row.$extras.totalValue,
+            brand: row.machine.brand,
+            model: row.machine.model,
+            serial: row.machine.serial,
+            color: row.machine.color,
+            valuePerHour: row.machine.valuePerHour,
+          }
+        )
+      });
+
+      return response.send({meta: hoursByMachines.getMeta(), data});
+    } catch (error) {
+      response.badRequest({
+        message: "Error consultando las horas",
+        error
+      })
+    }
+  }
+
+  async detailHoursByMachine({request, response, params}) {
+    try {
+      const {month, year} = request.all();
+      const startOfMonth = `${Number(year)}-${Number(month)}-01 00:00:00`;
+      const endOfMonth = `${Number(year)}-${Number(month) + 1}-01 00:00:00`;
+      let hoursByMachine = await MachineHoursWorked.query()
+        .preload("machine")
+        .preload('company')
+        .preload('employee')
+        .whereBetween('workedAt', [startOfMonth, endOfMonth])
+        .where('idMachine', '=', params.id)
+        .orderBy('workedAt', "asc")
+      ;
+
+      return response.send(hoursByMachine);
+    } catch (error) {
+      response.badRequest({
+        message: "Error consultando las horas",
+        error
+      })
+    }
+
   }
 
 }
