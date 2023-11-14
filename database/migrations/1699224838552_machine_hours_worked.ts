@@ -12,7 +12,7 @@ export default class extends BaseSchema {
       table.double('total_hours')
       table.double('value_per_hour')
       table.double('total_value')
-      table.date('worked_at').unique()
+      table.date('worked_at')
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

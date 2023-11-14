@@ -1,6 +1,8 @@
 import Employee from "App/Models/Employee";
 import {schema} from "@adonisjs/validator/build/src/Schema";
 import {rules} from "@adonisjs/validator/build/src/Rules";
+import EmployeeHoursWorked from "App/Models/EmployeeHoursWorked";
+import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class EmployeesController {
 
@@ -69,6 +71,68 @@ export default class EmployeesController {
     await employee.delete()
 
     return response.send(true);
+  }
+
+  async indexReportsHours({request, response}) {
+    try {
+      const {month, year, page, perPage} = request.all();
+      const startOfMonth = `${Number(year)}-${Number(month)}-01 00:00:00`;
+      const endOfMonth = `${Number(year)}-${Number(month) + 1}-01 00:00:00`;
+
+      let hoursByEmployees = await EmployeeHoursWorked.query()
+        .select('idEmployee', Database.raw('SUM(total_hours) as totalHours'), Database.raw('SUM(total_value) as totalValue'))
+        .whereBetween('workedAt', [startOfMonth, endOfMonth])
+        .groupBy('idEmployee')
+        .preload('employee')
+        .paginate(page ?? 1, perPage ?? 20);
+
+      let data: object[] = [];
+      hoursByEmployees.map(row => {
+        data.push({
+            idEmployee: row.idEmployee,
+            totalHours: row.$extras.totalHours,
+            totalValue: row.$extras.totalValue,
+            name: row.employee.name,
+            lastName: row.employee.lastName,
+            docType: row.employee.docType,
+            document: row.employee.document,
+            salary: row.employee.salary,
+            email: row.employee.email
+          }
+        )
+      });
+
+      return response.send({meta: hoursByEmployees.getMeta(), data});
+    } catch (error) {
+      response.badRequest({
+        message: "Error consultando las horas",
+        error
+      })
+    }
+  }
+
+  async detailHoursByEmployee({request, response, params}) {
+    try {
+      const {month, year} = request.all();
+      const startOfMonth = `${Number(year)}-${Number(month)}-01 00:00:00`;
+      const endOfMonth = `${Number(year)}-${Number(month) + 1}-01 00:00:00`;
+      let hoursByEmployee = await EmployeeHoursWorked.query()
+        .preload("machine")
+        .preload('company')
+        .preload('employee')
+        .whereBetween('workedAt', [startOfMonth, endOfMonth])
+        .where('idEmployee', '=', params.id)
+        .orderBy('workedAt',"asc")
+      ;
+
+      return response.send(hoursByEmployee);
+    } catch (error) {
+      response.badRequest({
+        message: "Error consultando las horas",
+        error
+      })
+    }
+
   }
 
 }

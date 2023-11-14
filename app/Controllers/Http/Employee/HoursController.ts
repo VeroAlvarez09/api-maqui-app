@@ -7,9 +7,17 @@ import Machine from "App/Models/Machine";
 
 export default class HoursController {
 
-  async index({response}) {
+  async index({response, auth}) {
     try {
-      const employeeHoursWorked: EmployeeHoursWorked[] = await EmployeeHoursWorked.query().preload('company').preload('machine').preload('employee');
+      let userLogin = auth.use('employee').user;
+      let id = userLogin.toJSON().id;
+
+      const employeeHoursWorked: EmployeeHoursWorked[] = await EmployeeHoursWorked.query()
+        .preload('company')
+        .preload('machine')
+        .preload('employee')
+        .where('idEmployee', "=", id)
+        .orderBy("workedAt", "desc");
 
       response.send(employeeHoursWorked)
     } catch (error) {

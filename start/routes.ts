@@ -44,6 +44,17 @@ Route.group(() => {
     "/:id",
     "Manage/EmployeesController.destroy"
   ).middleware('auth:manage');
+
+  Route.get(
+    "/report/hours",
+    "Manage/EmployeesController.indexReportsHours"
+  ).middleware('auth:manage');
+
+  Route.get(
+    "/report/hours/:id",
+    "Manage/EmployeesController.detailHoursByEmployee"
+  ).middleware('auth:manage');
+
 }).prefix("api/manage/employee");
 
 Route.group(() => {
